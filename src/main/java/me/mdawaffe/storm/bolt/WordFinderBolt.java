@@ -10,6 +10,7 @@ import backtype.storm.tuple.Values;
 import java.io.*;
 import java.util.Map;
 import java.util.HashSet;
+import java.lang.NullPointerException;
 
 
 public class WordFinderBolt extends BaseBasicBolt {
@@ -18,17 +19,7 @@ public class WordFinderBolt extends BaseBasicBolt {
 
 	@Override
 	public void prepare( Map stormConf, TopologyContext context ) {
-		BufferedReader wordBuffer;
-		try {
-			wordBuffer = new BufferedReader(new FileReader( "/home/storm/words.txt" ) );
-		} catch ( FileNotFoundException e ) {
-			try {
-				wordBuffer = new BufferedReader(new FileReader( "/Users/mdawaffe/Checkouts/storm-hackathon/src/main/java/me/mdawaffe/words.txt" ) );
-			} catch ( FileNotFoundException ee ) {
-				System.out.println( "NOT FOUND" );
-				return;
-			}
-		}
+		BufferedReader wordBuffer = new BufferedReader( new InputStreamReader( getClass().getResourceAsStream( "/me/mdawaffe/words.txt" ) ) );
 
 		this.words = new HashSet();
 
@@ -52,7 +43,7 @@ public class WordFinderBolt extends BaseBasicBolt {
 	public void execute(Tuple tuple, BasicOutputCollector collector) {
 		int i;
 		int recentCharsLength;
-		String trialWord;
+		String trialWord = "";
 
 		this.recentChars += tuple.getString( 0 );
 
@@ -68,8 +59,18 @@ public class WordFinderBolt extends BaseBasicBolt {
 		
 		for ( i = 3; i < recentCharsLength; i++ ) {
 			trialWord = this.recentChars.substring( 0, i );
-			if ( this.words.contains( trialWord ) ) {
-				collector.emit( new Values( trialWord ) );
+			if ( trialWord == null ) {
+				System.out.println( "NULL TRIAL WORD: " + this.recentChars );
+				continue;
+			}
+
+			try {
+				if ( this.words.contains( trialWord ) ) {
+					collector.emit( new Values( trialWord ) );
+				}
+			} catch( NullPointerException e ) {
+				System.out.println( "NullPointerException: " + this.recentChars + " i:" + i );
+				continue;
 			}
 		}
 	}

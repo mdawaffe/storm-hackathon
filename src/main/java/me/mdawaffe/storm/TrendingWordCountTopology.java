@@ -34,19 +34,19 @@ public class TrendingWordCountTopology {
 	public static void main( String[] args ) throws Exception {
 		TopologyBuilder builder = new TopologyBuilder();
 
-		builder.setSpout( "letter", new RandomCharacterSpout(), 10 );
+		builder.setSpout( "letter", new RandomCharacterSpout(), 1 );
 
-		builder.setBolt( "word",    new WordFinderBolt(),               3 ).shuffleGrouping( "letter" );
-		builder.setBolt( "length",  new CharacterCountBolt(),           3 ).shuffleGrouping( "word" );
-		builder.setBolt( "counter", new RollingCountBolt( 30, 5 ),      4 ).fieldsGrouping(  "length", new Fields( "length" ) );
-		builder.setBolt( "rank",    new IntermediateRankingsBolt( 10 ), 4 ).fieldsGrouping(  "counter", new Fields( "obj" ) );
-		builder.setBolt( "total",   new TotalRankingsBolt( 10 )           ).globalGrouping(  "rank" );
+		builder.setBolt( "word",    new WordFinderBolt(),               1 ).shuffleGrouping( "letter" );
+		builder.setBolt( "length",  new CharacterCountBolt(),           1 ).shuffleGrouping( "word" );
+		builder.setBolt( "counter", new RollingCountBolt( 30, 5 ),      1 ).fieldsGrouping(  "length", new Fields( "length" ) );
+		builder.setBolt( "rank",    new IntermediateRankingsBolt( 10 ), 1 ).fieldsGrouping(  "counter", new Fields( "obj" ) );
+		builder.setBolt( "total",   new TotalRankingsBolt( 10 ),        1 ).globalGrouping(  "rank" );
 	
 		Config conf = new Config();
 		conf.setDebug( true );
 	
 		if ( args != null && args.length > 0 ) {
-			conf.setNumWorkers( 3 );
+			conf.setNumWorkers( 1 );
 
 			StormSubmitter.submitTopology( args[0], conf, builder.createTopology() );
 		} else {
