@@ -35,24 +35,33 @@ If you want to do that, https://github.com/nathanmarz/storm-starter/ has some in
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Install [Vagrant](http://docs.vagrantup.com/v2/installation/)
 3. Initialize the VM:
+
    ~~~bash
    $ mkdir -p ~/VMs/storm
    $ cd ~/VMs/storm
    $ vagrant init storm https://dl.dropboxusercontent.com/u/2759041/Storm/stormvm.box
+   ~~~
+
 4. Configure the network in `~/VMs/storm/Vagrantfile`
+
    ~~~
    config.vm.network :private_network, ip: "192.168.101.11"
    ~~~
+
 5. Start the VM
+
    ~~~bash
    $ vagrant up
    ~~~
+
 6. Open the storm UI: http://192.168.101.11:8082
 7. Configure storm to submit to the cluster on the VM
+
    ~~~bash
    $ mkdir -p ~/.storm
    $ echo 'nimbus.host: "192.168.101.11"' > ~/.storm/storm.yaml
    ~~~
+
 
 Running a Storm Topology
 ------------------------
