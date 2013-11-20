@@ -4,8 +4,6 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
@@ -21,13 +19,13 @@ import storm.starter.bolt.TotalRankingsBolt;
 import me.mdawaffe.storm.spout.RandomStatsSpout;
 
 /**
- * RandomCharacterSpout -> Characters
- * Characters -> WordFinderBolt -> Words
- * Words -> CharacterCountBolt -> Integers
- * Anything? -> TrendingCountBolt -> Trending Counts
+ * Stats -> Projection by Country -> Trending Ranks
  */
 public class TrendingCountriesTopology {
 
+	/*
+	 * Project a Multi-Field Tuple stream onto a Single-Field Tuple stream
+	 */
 	public static class ProjectOneField extends BaseBasicBolt {
 		String field;
 

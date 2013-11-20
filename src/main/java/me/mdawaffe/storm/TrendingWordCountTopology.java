@@ -3,17 +3,9 @@ package me.mdawaffe.storm;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.testing.TestWordSpout;
-import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
-import java.util.Map;
 
 import storm.starter.bolt.RollingCountBolt;
 import storm.starter.bolt.IntermediateRankingsBolt;
@@ -27,7 +19,7 @@ import me.mdawaffe.storm.bolt.CharacterCountBolt;
  * RandomCharacterSpout -> Characters
  * Characters -> WordFinderBolt -> Words
  * Words -> CharacterCountBolt -> Integers
- * Anything? -> TrendingCountBolt -> Trending Counts
+ * -> Trending Ranks
  */
 public class TrendingWordCountTopology {
 

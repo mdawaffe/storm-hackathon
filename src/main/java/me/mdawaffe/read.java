@@ -3,6 +3,10 @@ package me.mdawaffe;
 import java.io.*;
 import java.util.HashSet;
 
+/*
+Useless stuff
+Just testing things
+*/
 public class read {
 	public static void main(String[] args) {
 		BufferedReader wordBuffer;
