@@ -66,6 +66,13 @@ If you want to do that, https://github.com/nathanmarz/storm-starter/ has some in
 Running a Storm Topology
 ------------------------
 
+### Build
+~~~bash
+$ mvn package
+~~~
+
+(My maven command is actually `mvn3`.)
+
 ### Submit
 ~~~bash
 $ ./tools/submit CLASS NAME
