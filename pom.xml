@@ -33,6 +33,13 @@
 				</dependency>
 		-->
 
+    <dependency>
+      <groupId>com.automattic.ngs</groupId>
+      <artifactId>ngs-log-listener</artifactId>
+      <version>0.1.0</version>
+      <scope>compile</scope>
+    </dependency>
+
 		<dependency>
 			<groupId>storm</groupId>
 			<artifactId>storm</artifactId>
