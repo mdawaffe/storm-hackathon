@@ -6,7 +6,6 @@ import backtype.storm.StormSubmitter;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
 import java.util.ArrayList;
-import java.util.List;
 import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
 import storm.kafka.ZkHosts;
@@ -21,17 +20,16 @@ public class TrendingCountryTopology {
 	public static void main( String[] args ) throws Exception {
 		TopologyBuilder builder = new TopologyBuilder();
 
-		// http://stackoverflow.com/questions/17807292/kafkaspout-is-not-receiving-anything-from-kafka
 		ZkHosts zkHosts = new ZkHosts( "localhost:9092" );
-		SpoutConfig spoutConf = new SpoutConfig( zkHosts,
+		SpoutConfig spoutConf = new SpoutConfig(
+						zkHosts,
 						"test", // name of topic used by producer & consumer
 						"/tmp/zookeeper", // zookeeper root path for offset storing
-						"KafkaSput" );
+						"KafkaSpout" );
 
 		builder.setSpout( "spout", new KafkaSpout( spoutConf ) );
 
-
-		builder.setBolt( "printaggreator", new PrinterBolt() ).shuffleGrouping( "logline" );
+		builder.setBolt( "printaggregator", new PrinterBolt()).shuffleGrouping( "spout" );
 		// builder.setBolt( "counter", new RollingCountBolt( 30, 5 ),      4 ).fieldsGrouping(  "logline", new Fields( "country" ) );
 		// builder.setBolt( "rank",    new IntermediateRankingsBolt( 10 ), 4 ).fieldsGrouping(  "counter", new Fields( "obj" ) );
 		// builder.setBolt( "total",   new TotalRankingsBolt( 10 )           ).globalGrouping(  "rank" );
