@@ -5,6 +5,7 @@ import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
+import me.mdawaffe.storm.bolt.WTFBolt;
 import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
 import storm.kafka.ZkHosts;
@@ -15,7 +16,7 @@ public class TrendingCountryTopology {
 	public static void main( String[] args ) throws Exception {
 		TopologyBuilder builder = new TopologyBuilder();
 
-		ZkHosts zkHosts = new ZkHosts( "ec2-54-237-37-170.compute-1.amazonaws.com:2181" );
+		ZkHosts zkHosts = new ZkHosts( "localhost:2181" );
 		SpoutConfig spoutConf = new SpoutConfig(
 						zkHosts,
 						"test", // name of topic used by producer & consumer
@@ -23,7 +24,7 @@ public class TrendingCountryTopology {
 						"KafkaSpout" );
 
 		builder.setSpout( "stats", new KafkaSpout( spoutConf ) );
-		builder.setBolt( "printaggregator", new PrinterBolt()).shuffleGrouping( "stats" );
+		builder.setBolt( "wtf", new WTFBolt() ).shuffleGrouping( "stats" );
 
 		// builder.setBolt( "country", new ProjectOneStringField( "country" ), 1 ).localOrShuffleGrouping( "stats" );
 
