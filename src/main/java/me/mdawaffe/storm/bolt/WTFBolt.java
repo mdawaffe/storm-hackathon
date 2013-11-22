@@ -19,13 +19,12 @@ public class WTFBolt extends BaseBasicBolt {
 
 	@Override
 	public void execute( Tuple tuple, BasicOutputCollector collector ) {
-		String value = tuple.getString( 0 );
-
+		Object value = tuple.getValue( 0 );
 		collector.emit( new Values( value.getClass().getName() ) );
 	}
 
 	@Override
 	public void declareOutputFields( OutputFieldsDeclarer ofd ) {
-		ofd.declare( new Fields( this.field ) );
+		ofd.declare( new Fields( "bob" ) );
 	}
 }
