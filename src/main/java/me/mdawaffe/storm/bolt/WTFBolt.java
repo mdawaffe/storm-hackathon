@@ -21,7 +21,7 @@ public class WTFBolt extends BaseBasicBolt {
 	public void execute( Tuple tuple, BasicOutputCollector collector ) {
 		String value = tuple.getString( 0 );
 
-		collector.emit( new Values( value.getClass().toString() ) );
+		collector.emit( new Values( value.getClass().getName() ) );
 	}
 
 	@Override
