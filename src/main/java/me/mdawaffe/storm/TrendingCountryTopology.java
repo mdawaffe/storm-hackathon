@@ -15,7 +15,7 @@ public class TrendingCountryTopology {
 	public static void main( String[] args ) throws Exception {
 		TopologyBuilder builder = new TopologyBuilder();
 
-		ZkHosts zkHosts = new ZkHosts( "localhost:2181" );
+		ZkHosts zkHosts = new ZkHosts( "ec2-54-237-37-170.compute-1.amazonaws.com:2181" );
 		SpoutConfig spoutConf = new SpoutConfig(
 						zkHosts,
 						"test", // name of topic used by producer & consumer
@@ -41,8 +41,6 @@ public class TrendingCountryTopology {
 
 		conf.setNumWorkers( 1 );
 
-		System.out.println( "=====> Submitting topoology / LOCAL cluster" );
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology( "test", conf, builder.createTopology() );
+		StormSubmitter.submitTopology( "test", conf, builder.createTopology() );
 	}
 }
