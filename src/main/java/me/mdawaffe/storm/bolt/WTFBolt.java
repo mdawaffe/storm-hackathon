@@ -7,9 +7,6 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-/*
- * Project a Multi-Field Tuple stream onto a Single-Field Tuple stream
- */
 public class WTFBolt extends BaseBasicBolt {
 	String field;
 

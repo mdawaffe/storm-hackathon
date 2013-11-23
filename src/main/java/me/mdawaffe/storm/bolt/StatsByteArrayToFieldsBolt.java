@@ -8,45 +8,55 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import com.automattic.ngs.kafka.WpcomStatsLogline;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 
 /*
  * Project a Multi-Field Tuple stream onto a Single-Field Tuple stream
  */
 public class StatsByteArrayToFieldsBolt extends BaseBasicBolt {
 
-	protected Logger log;
+	private String m_whichField = null;
 
 	public StatsByteArrayToFieldsBolt() {
 		super();
-		log = Logger.getLogger(getClass().getName());
+	}
+
+	public StatsByteArrayToFieldsBolt( String justOneField ) {
+		super();
+		m_whichField = justOneField;
 	}
 
 	@Override
 	public void execute( Tuple tuple, BasicOutputCollector collector ) {
 		Object value = tuple.getValue( 0 );
-		String strJson = new String( (byte[])value );
+		String logline = new String( (byte[])value );
 
-		log.debug( "=====> Got json line, turning into fields [" + strJson + "]" );
-
+		Values out = null;
 		List fields = null;
 		try {
-			fields = WpcomStatsLogline.asValuesList( strJson );
+			JSONObject objJson = WpcomStatsLogline.asJsonObject( logline );
+			if ( m_whichField != null ) {
+				out = new Values( (String)objJson.get( m_whichField ) );
+			} else {
+				out = new Values();
+				fields = WpcomStatsLogline.asValuesList( logline );
+				out.addAll( fields );
+			}
 		} catch ( Exception ex ) {
-			log.debug( "=====> Error interpreting log line: [" + strJson + "]" );
-			// @todo How to skip emitting?
+			// Don't emit anything
 			return;
 		}
 
-		Values out = new Values();
-		out.addAll( fields );
-
 		// collector.emit( new Values( value.getClass().getName() ) );
-		collector.emit( new Values( out ) );
+		collector.emit( out );
 	}
 
 	@Override
 	public void declareOutputFields( OutputFieldsDeclarer ofd ) {
-		ofd.declare( new Fields( WpcomStatsLogline.getFieldList() ) );
+		if ( m_whichField != null ) {
+			ofd.declare( new Fields( m_whichField ) );
+		} else {
+			ofd.declare( new Fields( WpcomStatsLogline.getFieldList() ) );
+		}
 	}
 }
